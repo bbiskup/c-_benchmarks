@@ -1,8 +1,10 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <boost/chrono/thread_clock.hpp>
 
 using namespace std;
+using namespace boost::chrono;
 
 void benchmark_add(int count) { cout << "count: " << count << endl; }
 
@@ -18,11 +20,15 @@ int main(int argc, char const *argv[]) {
   auto cmd_name = argv[1];
 
   auto cmd_it = commands.find(cmd_name);
-  if (cmd_it == commands.end()){
+  if (cmd_it == commands.end()) {
     cerr << "Command '" << cmd_name << "' unknown" << endl;
     exit(1);
   }
-  
+
+  thread_clock::time_point start = thread_clock::now();
   cmd_it->second(10);
+  thread_clock::time_point stop = thread_clock::now();
+  std::cout << "duration: " << duration_cast<milliseconds>(stop - start).count()
+            << " ms\n";
   return 0;
 }
