@@ -7,17 +7,39 @@
 using namespace std;
 using namespace boost::chrono;
 
-void benchmark_add(int count) {
+void benchmark_empty(int count) {
   for (int i = 0; i < count; ++i) {
-    ;;
+    ;
   }
+}
+
+void benchmark_add(int count) {
+  int a = 0;
+  for (int i = 0; i < count; ++i) {
+    a += i;
+  }
+}
+
+void benchmark_deref_ptr(int count) {
+  int a = 0;
+  int* b = &a;
+  int c;
+  int result;
+  for (int i = 0; i < count; ++i) {
+    c = *b;
+  }
+  result = c;
 }
 
 typedef void (*benchmark_ptr)(int);
 
-map<string, benchmark_ptr> commands = {{"add", benchmark_add}};
+map<string, benchmark_ptr> commands = {
+    {"empty", benchmark_empty},
+    {"add", benchmark_add},
+    {"deref_ptr", benchmark_deref_ptr},
+};
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const* argv[]) {
   if (argc < 3) {
     cerr << "usage" << endl;
     exit(1);
@@ -42,7 +64,9 @@ int main(int argc, char const *argv[]) {
   cmd_it->second(count);
   thread_clock::time_point stop = thread_clock::now();
   auto duration = duration_cast<milliseconds>(stop - start).count();
-  std::cout << "duration per call: " << duration / static_cast<float>(count) * 1000000 << " ns\n";
+  auto duration_per_call_ns = duration / static_cast<float>(count) * 1000000;
+  std::cout << "duration per call: " << duration_per_call_ns << " ns\n";
+  std::cout << 1 / duration_per_call_ns * 1000 << " million calls per s\n";
   std::cout << "duration: " << duration << " ms\n";
   return 0;
 }
