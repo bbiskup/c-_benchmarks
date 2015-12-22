@@ -110,7 +110,8 @@ int main(int argc, char const* argv[]) {
   auto duration_per_call_ns = duration / static_cast<float>(count) * 1000000;
 
   std::cout << "Result: " << result << endl;
-  std::cout << "duration per call: " << duration_per_call_ns << " ns\n";
+  std::cout << "duration per call: " << duration_per_call_ns << " ns "
+            << "(" << (duration_per_call_ns / 1000) << " µs) \n";
   std::cout << 1 / duration_per_call_ns * 1000 << " million calls per s\n";
   std::cout << "duration: " << duration << " ms\n";
   return 0;
