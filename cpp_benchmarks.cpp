@@ -81,7 +81,7 @@ count_t benchmark_read_64k(count_t count) {
   int result = 0;
   for (count_t i = 0; i < count; ++i) {
     for (int j = 0; j < memSize; ++j) {
-      result += mem[j];
+      result &= mem[j];
     }
   }
   return result;
@@ -99,6 +99,17 @@ count_t benchmark_try_catch(count_t count) {
   return result;
 }
 
+int a_func(int a) { return 2 * a; }
+
+count_t benchmark_func_ptr(count_t count) {
+  int result = 0;
+  auto f_ptr = a_func;
+  for (count_t i = 0; i < count; ++i) {
+    result += f_ptr(1);
+  }
+  return result;
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -110,6 +121,7 @@ map<string, benchmark_ptr> commands = {
     {"write_64k", benchmark_write_64k},
     {"read_64k", benchmark_read_64k},
     {"try_catch", benchmark_try_catch},
+    {"func_ptr", benchmark_func_ptr},
 };
 
 int main(int argc, char const* argv[]) {
@@ -137,13 +149,16 @@ int main(int argc, char const* argv[]) {
   auto result = cmd_it->second(count);
   thread_clock::time_point stop = thread_clock::now();
 
-  auto duration = duration_cast<milliseconds>(stop - start).count();
-  auto duration_per_call_ns = duration / static_cast<float>(count) * 1000000;
+  auto duration = duration_cast<nanoseconds>(stop - start).count();
+  auto duration_per_call_ns =
+      duration /
+      static_cast<double>(count);  // / static_cast<double>(count) * 1000000;
+  auto duration_ms = duration / 1000000.;
 
   std::cout << "Result: " << result << endl;
   std::cout << "duration per call: " << duration_per_call_ns << " ns "
-            << "(" << (duration_per_call_ns / 1000) << " µs) \n";
-  std::cout << 1 / duration_per_call_ns * 1000 << " million calls per s\n";
-  std::cout << "duration: " << duration << " ms\n";
+            << "(" << (duration_per_call_ns / 1000.) << " µs) \n";
+  std::cout << (1. / duration_per_call_ns * 1000) << " million calls per s\n";
+  std::cout << "duration: " << duration_ms << " ms\n";
   return 0;
 }
