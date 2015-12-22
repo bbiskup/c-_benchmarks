@@ -150,9 +150,7 @@ int main(int argc, char const* argv[]) {
   thread_clock::time_point stop = thread_clock::now();
 
   auto duration = duration_cast<nanoseconds>(stop - start).count();
-  auto duration_per_call_ns =
-      duration /
-      static_cast<double>(count);  // / static_cast<double>(count) * 1000000;
+  auto duration_per_call_ns = duration / static_cast<double>(count);
   auto duration_ms = duration / 1000000.;
 
   std::cout << "Result: " << result << endl;
