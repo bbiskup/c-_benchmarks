@@ -71,6 +71,34 @@ count_t benchmark_write_64k(count_t count) {
   return mem[0];
 }
 
+count_t benchmark_read_64k(count_t count) {
+  const int memSize = 1024 * 64;
+  unsigned char mem[memSize];
+  for (int j = 0; j < memSize; ++j) {
+    mem[j] = j;
+  }
+
+  int result = 0;
+  for (count_t i = 0; i < count; ++i) {
+    for (int j = 0; j < memSize; ++j) {
+      result += mem[j];
+    }
+  }
+  return result;
+}
+
+count_t benchmark_try_catch(count_t count) {
+  int result = 0;
+  for (count_t i = 0; i < count; ++i) {
+    try {
+      throw exception();
+    } catch (exception& e) {
+      ++result;
+    }
+  }
+  return result;
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -79,7 +107,10 @@ map<string, benchmark_ptr> commands = {
     {"func_call", benchmark_func_call},
     {"inline_func_call", benchmark_func_call},
     {"deref_ptr", benchmark_deref_ptr},
-    {"write_64k", benchmark_write_64k}};
+    {"write_64k", benchmark_write_64k},
+    {"read_64k", benchmark_read_64k},
+    {"try_catch", benchmark_try_catch},
+};
 
 int main(int argc, char const* argv[]) {
   if (argc < 3) {
