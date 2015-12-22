@@ -78,7 +78,7 @@ count_t benchmark_read_64k(count_t count) {
     mem[j] = j;
   }
 
-  int result = 0;
+  int result = 1;
   for (count_t i = 0; i < count; ++i) {
     for (int j = 0; j < memSize; ++j) {
       result &= mem[j];
