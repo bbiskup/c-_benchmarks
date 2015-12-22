@@ -60,6 +60,17 @@ count_t benchmark_deref_ptr(count_t count) {
   return count;
 }
 
+count_t benchmark_write_64k(count_t count) {
+  const int memSize = 1024 * 64;
+  unsigned char mem[memSize];
+  for (count_t i = 0; i < count; ++i) {
+    for (int j = 0; j < memSize; ++j) {
+      mem[j] = j;
+    }
+  }
+  return mem[0];
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -68,7 +79,7 @@ map<string, benchmark_ptr> commands = {
     {"func_call", benchmark_func_call},
     {"inline_func_call", benchmark_func_call},
     {"deref_ptr", benchmark_deref_ptr},
-};
+    {"write_64k", benchmark_write_64k}};
 
 int main(int argc, char const* argv[]) {
   if (argc < 3) {
