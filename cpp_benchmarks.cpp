@@ -57,7 +57,7 @@ count_t benchmark_deref_ptr(count_t count) {
     c = *b;
   }
   result = c;
-  return count;
+  return result;
 }
 
 count_t benchmark_write_64k(count_t count) {
@@ -68,7 +68,7 @@ count_t benchmark_write_64k(count_t count) {
       mem[j] = j;
     }
   }
-  return mem[0];
+  return mem[memSize - 1];
 }
 
 count_t benchmark_read_64k(count_t count) {
@@ -123,7 +123,6 @@ class C2 : public C {
 
 count_t benchmark_nonvirt_method(count_t count) {
   int result = 0;
-  auto f_ptr = a_func;
   C c;
   for (count_t i = 0; i < count; ++i) {
     result += c.a_method(1);
@@ -133,7 +132,6 @@ count_t benchmark_nonvirt_method(count_t count) {
 
 count_t benchmark_virt_method(count_t count) {
   int result = 0;
-  auto f_ptr = a_func;
   C2 c2;
   for (count_t i = 0; i < count; ++i) {
     result += c2.a_virtual_method(1);
