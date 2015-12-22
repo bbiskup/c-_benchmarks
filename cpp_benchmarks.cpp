@@ -110,6 +110,37 @@ count_t benchmark_func_ptr(count_t count) {
   return result;
 }
 
+class C {
+ public:
+  int a_method(int a) { return 2 * a; }
+  virtual int a_virtual_method(int a) { return 2 * a; }
+};
+
+class C2 : public C {
+ public:
+  virtual int a_virtual_method(int a) { return 3 * a; }
+};
+
+count_t benchmark_nonvirt_method(count_t count) {
+  int result = 0;
+  auto f_ptr = a_func;
+  C c;
+  for (count_t i = 0; i < count; ++i) {
+    result += c.a_method(1);
+  }
+  return result;
+}
+
+count_t benchmark_virt_method(count_t count) {
+  int result = 0;
+  auto f_ptr = a_func;
+  C2 c2;
+  for (count_t i = 0; i < count; ++i) {
+    result += c2.a_virtual_method(1);
+  }
+  return result;
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -122,6 +153,8 @@ map<string, benchmark_ptr> commands = {
     {"read_64k", benchmark_read_64k},
     {"try_catch", benchmark_try_catch},
     {"func_ptr", benchmark_func_ptr},
+    {"nonvirt_method", benchmark_nonvirt_method},
+    {"virt_method", benchmark_virt_method},
 };
 
 int main(int argc, char const* argv[]) {
