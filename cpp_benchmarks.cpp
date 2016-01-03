@@ -139,6 +139,15 @@ count_t benchmark_virt_method(count_t count) {
   return result;
 }
 
+count_t benchmark_lambda(count_t count) {
+  int result = 0;
+  int a;
+  for (count_t i = 0; i < count; ++i) {
+    result += [&a, i]() -> int { return a + i; }();
+  }
+  return result;
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -153,6 +162,7 @@ map<string, benchmark_ptr> commands = {
     {"func_ptr", benchmark_func_ptr},
     {"nonvirt_method", benchmark_nonvirt_method},
     {"virt_method", benchmark_virt_method},
+    {"lambda", benchmark_lambda},
 };
 
 int main(int argc, char const* argv[]) {
