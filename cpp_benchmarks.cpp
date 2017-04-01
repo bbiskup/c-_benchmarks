@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <bitset>
 #include <boost/chrono/thread_clock.hpp>
 
 using namespace std;
@@ -181,6 +182,26 @@ count_t benchmark_lambda(count_t count) {
   return result;
 }
 
+count_t benchmark_xor(count_t count) {
+  int result = 0;
+  unsigned char c = 1;
+  for (count_t i = 0; i < count; ++i) {
+    c ^= i;
+  }
+  result = c;
+  return result;
+}
+
+count_t benchmark_xor_bitset(count_t count) {
+  int result = 0;
+  bitset<8> c = 1;
+  for (count_t i = 0; i < count; ++i) {
+    c ^= i;
+  }
+  result = c.to_ulong();
+  return result;
+}
+
 typedef count_t (*benchmark_ptr)(count_t);
 
 map<string, benchmark_ptr> commands = {
@@ -198,6 +219,8 @@ map<string, benchmark_ptr> commands = {
     {"nonvirt_method", benchmark_nonvirt_method},
     {"virt_method", benchmark_virt_method},
     {"lambda", benchmark_lambda},
+    {"xor", benchmark_xor},
+    {"xor_bitset", benchmark_xor_bitset},
 };
 
 int main(int argc, char const* argv[]) {
