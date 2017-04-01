@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <array>
 #include <map>
 #include <string>
 #include <sstream>
@@ -121,6 +122,22 @@ count_t benchmark_read_64k_vec_at(count_t count) {
   return result;
 }
 
+count_t benchmark_read_64k_array_at(count_t count) {
+  const int memSize = 1024 * 64;
+  array<unsigned char, memSize> mem;
+  for (int j = 0; j < memSize; ++j) {
+    mem[j] = j;
+  }
+
+  int result = 1;
+  for (count_t i = 0; i < count; ++i) {
+    for (int j = 0; j < memSize; ++j) {
+      result &= mem.at(j);
+    }
+  }
+  return result;
+}
+
 count_t benchmark_try_catch(count_t count) {
   int result = 0;
   for (count_t i = 0; i < count; ++i) {
@@ -214,6 +231,7 @@ map<string, benchmark_ptr> commands = {
     {"read_64k", benchmark_read_64k},
     {"read_64k_vec", benchmark_read_64k_vec},
     {"read_64k_vec_at", benchmark_read_64k_vec_at},
+    {"read_64k_array_at", benchmark_read_64k_array_at},
     {"try_catch", benchmark_try_catch},
     {"func_ptr", benchmark_func_ptr},
     {"nonvirt_method", benchmark_nonvirt_method},
