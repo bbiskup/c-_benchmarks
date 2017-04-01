@@ -10,7 +10,7 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # clang settings
 set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -O0")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -O2")
 
 
 find_package (Boost COMPONENTS 
