@@ -1,3 +1,4 @@
+#include <boost/chrono/thread_clock.hpp>
 #include <iostream>
 #include <vector>
 #include <array>
@@ -194,12 +195,25 @@ vector<string> many_strings() {
   return vector<string>(10000, "abcdefghijklmnopqrstuvwxyz");
 }
 
+vector<string> many_strings_static() {
+  static vector<string> result(10000, "abcdefghijklmnopqrstuvwxyz");
+  return result;
+}
+
 count_t benchmark_string_concat_plus(count_t count) {
   string result;
   for (const string& s : many_strings()) {
     result += s;
   }
   return result.size();
+}
+
+count_t benchmark_string_concat_ostringstream(count_t count) {
+  ostringstream result;
+  for (const string& s : many_strings()) {
+    result << s;
+  }
+  return result.str().size();
 }
 
 count_t benchmark_lambda(count_t count) {
@@ -251,8 +265,10 @@ map<string, benchmark_ptr> commands = {
     {"lambda", benchmark_lambda},
     {"xor", benchmark_xor},
     {"xor_bitset", benchmark_xor_bitset},
-    {"benchmark_string_concat_plus", benchmark_string_concat_plus}
-};
+    {"benchmark_string_concat_plus", 
+    benchmark_string_concat_plus},
+    {"benchmark_string_concat_ostringstream",
+     benchmark_string_concat_ostringstream}};
 
 int main(int argc, char const* argv[]) {
   if (argc < 3) {
