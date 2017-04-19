@@ -190,6 +190,18 @@ count_t benchmark_virt_method(count_t count) {
   return result;
 }
 
+vector<string> many_strings() {
+  return vector<string>(10000, "abcdefghijklmnopqrstuvwxyz");
+}
+
+count_t benchmark_string_concat_plus(count_t count) {
+  string result;
+  for (const string& s : many_strings()) {
+    result += s;
+  }
+  return result.size();
+}
+
 count_t benchmark_lambda(count_t count) {
   int result = 0;
   int a;
@@ -239,6 +251,7 @@ map<string, benchmark_ptr> commands = {
     {"lambda", benchmark_lambda},
     {"xor", benchmark_xor},
     {"xor_bitset", benchmark_xor_bitset},
+    {"benchmark_string_concat_plus", benchmark_string_concat_plus}
 };
 
 int main(int argc, char const* argv[]) {
