@@ -1,4 +1,4 @@
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 project(cpp_benchmarks)
 cmake_minimum_required(VERSION 3.13.1)
 aux_source_directory(src SRC_LIST)
@@ -22,4 +22,5 @@ find_package (Boost COMPONENTS
 
  target_link_libraries(${PROJECT_NAME}
                       ${Boost_LIBRARIES}
+                      benchmark
                       )
