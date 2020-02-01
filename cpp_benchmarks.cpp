@@ -1,38 +1,47 @@
 #include <boost/chrono/thread_clock.hpp>
-#include <iostream>
-#include <vector>
+
 #include <array>
-#include <map>
-#include <string>
-#include <sstream>
 #include <bitset>
-#include <boost/chrono/thread_clock.hpp>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace boost::chrono;
 
 typedef long long count_t;
 
-count_t benchmark_empty(count_t count) {
-  for (count_t i = 0; i < count; ++i) {
+count_t benchmark_empty(count_t count)
+{
+  for (count_t i = 0; i < count; ++i)
+  {
     ;
   }
   return count;
 }
 
-count_t benchmark_add(count_t count) {
+count_t benchmark_add(count_t count)
+{
   count_t a = 0;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     a += i;
   }
   return count;
 }
 
-count_t non_inline_func(count_t x) { return x; }
+count_t non_inline_func(count_t x)
+{
+  return x;
+}
 
-count_t benchmark_func_call(count_t count) {
+count_t benchmark_func_call(count_t count)
+{
   count_t a = 0;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     a += non_inline_func(i);
   }
 
@@ -40,11 +49,16 @@ count_t benchmark_func_call(count_t count) {
   return count;
 }
 
-inline count_t inline_func(count_t x) { return x; }
+inline count_t inline_func(count_t x)
+{
+  return x;
+}
 
-count_t benchmark_inline_func_call(count_t count) {
+count_t benchmark_inline_func_call(count_t count)
+{
   count_t a = 0;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     a += inline_func(i);
   }
 
@@ -52,193 +66,242 @@ count_t benchmark_inline_func_call(count_t count) {
   return count;
 }
 
-count_t benchmark_deref_ptr(count_t count) {
+count_t benchmark_deref_ptr(count_t count)
+{
   count_t a = 0;
   count_t* b = &a;
   count_t c;
   count_t result;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     c = *b;
   }
   result = c;
   return result;
 }
 
-count_t benchmark_write_64k(count_t count) {
+count_t benchmark_write_64k(count_t count)
+{
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
-  for (count_t i = 0; i < count; ++i) {
-    for (int j = 0; j < memSize; ++j) {
+  for (count_t i = 0; i < count; ++i)
+  {
+    for (int j = 0; j < memSize; ++j)
+    {
       mem[j] = j;
     }
   }
   return mem[memSize - 1];
 }
 
-count_t benchmark_read_64k(count_t count) {
+count_t benchmark_read_64k(count_t count)
+{
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
-  for (int j = 0; j < memSize; ++j) {
+  for (int j = 0; j < memSize; ++j)
+  {
     mem[j] = j;
   }
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i) {
-    for (int j = 0; j < memSize; ++j) {
+  for (count_t i = 0; i < count; ++i)
+  {
+    for (int j = 0; j < memSize; ++j)
+    {
       result &= mem[j];
     }
   }
   return result;
 }
 
-count_t benchmark_read_64k_vec(count_t count) {
+count_t benchmark_read_64k_vec(count_t count)
+{
   const int memSize = 1024 * 64;
   vector<unsigned char> mem(memSize);
-  for (int j = 0; j < memSize; ++j) {
+  for (int j = 0; j < memSize; ++j)
+  {
     mem[j] = j;
   }
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i) {
-    for (int j = 0; j < memSize; ++j) {
+  for (count_t i = 0; i < count; ++i)
+  {
+    for (int j = 0; j < memSize; ++j)
+    {
       result &= mem[j];
     }
   }
   return result;
 }
 
-count_t benchmark_read_64k_vec_at(count_t count) {
+count_t benchmark_read_64k_vec_at(count_t count)
+{
   const int memSize = 1024 * 64;
   vector<unsigned char> mem(memSize);
-  for (int j = 0; j < memSize; ++j) {
+  for (int j = 0; j < memSize; ++j)
+  {
     mem[j] = j;
   }
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i) {
-    for (int j = 0; j < memSize; ++j) {
+  for (count_t i = 0; i < count; ++i)
+  {
+    for (int j = 0; j < memSize; ++j)
+    {
       result &= mem.at(j);
     }
   }
   return result;
 }
 
-count_t benchmark_read_64k_array_at(count_t count) {
+count_t benchmark_read_64k_array_at(count_t count)
+{
   const int memSize = 1024 * 64;
   array<unsigned char, memSize> mem;
-  for (int j = 0; j < memSize; ++j) {
+  for (int j = 0; j < memSize; ++j)
+  {
     mem[j] = j;
   }
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i) {
-    for (int j = 0; j < memSize; ++j) {
+  for (count_t i = 0; i < count; ++i)
+  {
+    for (int j = 0; j < memSize; ++j)
+    {
       result &= mem.at(j);
     }
   }
   return result;
 }
 
-count_t benchmark_try_catch(count_t count) {
+count_t benchmark_try_catch(count_t count)
+{
   int result = 0;
-  for (count_t i = 0; i < count; ++i) {
-    try {
+  for (count_t i = 0; i < count; ++i)
+  {
+    try
+    {
       throw exception();
-    } catch (exception& e) {
+    }
+    catch (exception& e)
+    {
       ++result;
     }
   }
   return result;
 }
 
-int a_func(int a) { return 2 * a; }
+int a_func(int a)
+{
+  return 2 * a;
+}
 
-count_t benchmark_func_ptr(count_t count) {
+count_t benchmark_func_ptr(count_t count)
+{
   int result = 0;
   auto f_ptr = a_func;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     result += f_ptr(1);
   }
   return result;
 }
 
-class C {
- public:
+class C
+{
+public:
   int a_method(int a) { return 2 * a; }
   virtual int a_virtual_method(int a) { return 2 * a; }
 };
 
-class C2 : public C {
- public:
+class C2 : public C
+{
+public:
   virtual int a_virtual_method(int a) { return 3 * a; }
 };
 
-count_t benchmark_nonvirt_method(count_t count) {
+count_t benchmark_nonvirt_method(count_t count)
+{
   int result = 0;
   C c;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     result += c.a_method(1);
   }
   return result;
 }
 
-count_t benchmark_virt_method(count_t count) {
+count_t benchmark_virt_method(count_t count)
+{
   int result = 0;
   C2 c2;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     result += c2.a_virtual_method(1);
   }
   return result;
 }
 
-vector<string> many_strings() {
+vector<string> many_strings()
+{
   return vector<string>(10000, "abcdefghijklmnopqrstuvwxyz");
 }
 
-vector<string> many_strings_static() {
+vector<string> many_strings_static()
+{
   static vector<string> result(10000, "abcdefghijklmnopqrstuvwxyz");
   return result;
 }
 
-count_t benchmark_string_concat_plus(count_t count) {
+count_t benchmark_string_concat_plus(count_t count)
+{
   string result;
-  for (const string& s : many_strings()) {
+  for (const string& s : many_strings())
+  {
     result += s;
   }
   return result.size();
 }
 
-count_t benchmark_string_concat_ostringstream(count_t count) {
+count_t benchmark_string_concat_ostringstream(count_t count)
+{
   ostringstream result;
-  for (const string& s : many_strings()) {
+  for (const string& s : many_strings())
+  {
     result << s;
   }
   return result.str().size();
 }
 
-count_t benchmark_lambda(count_t count) {
+count_t benchmark_lambda(count_t count)
+{
   int result = 0;
   int a;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     result += [&a, i]() -> int { return a + i; }();
   }
   return result;
 }
 
-count_t benchmark_xor(count_t count) {
+count_t benchmark_xor(count_t count)
+{
   int result = 0;
   unsigned char c = 1;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     c ^= i;
   }
   result = c;
   return result;
 }
 
-count_t benchmark_xor_bitset(count_t count) {
+count_t benchmark_xor_bitset(count_t count)
+{
   int result = 0;
   bitset<8> c = 1;
-  for (count_t i = 0; i < count; ++i) {
+  for (count_t i = 0; i < count; ++i)
+  {
     c ^= i;
   }
   result = c.to_ulong();
@@ -265,13 +328,13 @@ map<string, benchmark_ptr> commands = {
     {"lambda", benchmark_lambda},
     {"xor", benchmark_xor},
     {"xor_bitset", benchmark_xor_bitset},
-    {"benchmark_string_concat_plus", 
-    benchmark_string_concat_plus},
-    {"benchmark_string_concat_ostringstream",
-     benchmark_string_concat_ostringstream}};
+    {"benchmark_string_concat_plus", benchmark_string_concat_plus},
+    {"benchmark_string_concat_ostringstream", benchmark_string_concat_ostringstream}};
 
-int main(int argc, char const* argv[]) {
-  if (argc < 3) {
+int main(int argc, char const* argv[])
+{
+  if (argc < 3)
+  {
     cerr << "usage" << endl;
     exit(1);
   }
@@ -280,13 +343,15 @@ int main(int argc, char const* argv[]) {
   count_t count;
   istringstream count_strm(count_str);
 
-  if (!(count_strm >> count)) {
+  if (!(count_strm >> count))
+  {
     cerr << "Invalid count: '" << count_str << endl;
     exit(1);
   }
 
   auto cmd_it = commands.find(cmd_name);
-  if (cmd_it == commands.end()) {
+  if (cmd_it == commands.end())
+  {
     cerr << "Command '" << cmd_name << "' unknown" << endl;
     exit(1);
   }
