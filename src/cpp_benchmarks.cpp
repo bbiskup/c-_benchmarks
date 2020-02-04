@@ -347,7 +347,7 @@ void BM_xor_bitset(benchmark::State& state)
 }
 BENCHMARK(BM_xor_bitset);
 
-static void BM_fmt_positional(benchmark::State& state)
+static void BM_string_formatting_fmt_positional(benchmark::State& state)
 {
   count_t i{0};
   std::string s;
@@ -356,12 +356,12 @@ static void BM_fmt_positional(benchmark::State& state)
     s = fmt::format(
         "{} {} {} {} {} {} {} {} {} {}", i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8,
         i + 9);
+    benchmark::DoNotOptimize(s);
   }
-  benchmark::DoNotOptimize(s);
 }
-BENCHMARK(BM_fmt_positional);
+BENCHMARK(BM_string_formatting_fmt_positional);
 
-static void BM_fmt_named_args(benchmark::State& state)
+static void BM_string_formatting_fmt_named_args(benchmark::State& state)
 {
   using namespace fmt::literals;
   count_t i{0};
@@ -372,9 +372,25 @@ static void BM_fmt_named_args(benchmark::State& state)
         "{zero} {one} {two} {three} {four} {five} {six} {seven} {eight} {nine}", "zero"_a = i,
         "one"_a = i + 1, "two"_a = i + 2, "three"_a = i + 3, "four"_a = i + 4, "five"_a = i + 5,
         "six"_a = i + 6, "seven"_a = i + 7, "eight"_a = i + 8, "nine"_a = i + 9);
+    benchmark::DoNotOptimize(s);
   }
-  benchmark::DoNotOptimize(s);
 }
-BENCHMARK(BM_fmt_named_args);
+BENCHMARK(BM_string_formatting_fmt_named_args);
+
+static void BM_string_formatting_ostringstream_args(benchmark::State& state)
+{
+  using namespace fmt::literals;
+  count_t i{0};
+  std::string s;
+  for (auto _ : state)
+  {
+    std::ostringstream strm;
+    strm << (i + 1) << " " << (i + 2) << " " << (i + 3) << " " << (i + 4) << " " << (i + 5) << " "
+         << (i + 6) << " " << (i + 7) << " " << (i + 8) << " " << (i + 9);
+    s = strm.str();
+    benchmark::DoNotOptimize(s);
+  }
+}
+BENCHMARK(BM_string_formatting_ostringstream_args);
 
 BENCHMARK_MAIN();
