@@ -1,4 +1,3 @@
-#include <boost/chrono/thread_clock.hpp>
 #include <benchmark/benchmark.h>
 
 #include <array>
@@ -10,175 +9,195 @@
 #include <vector>
 
 using namespace std;
-using namespace boost::chrono;
+using count_t = long long;
 
-typedef long long count_t;
+// See discussion at
+// https://stackoverflow.com/questions/40122141/preventing-compiler-optimizations-while-benchmarking
+// about correct use of benchmark::DoNotOptimize and benchmark::ClobberMemory
 
-count_t benchmark_empty(count_t count)
+static void BM_empty(benchmark::State& state)
 {
-  for (count_t i = 0; i < count; ++i)
   {
-    ;
+    for (auto _ : state)
+      ;
   }
-  return count;
 }
+BENCHMARK(BM_empty);
 
-count_t benchmark_add(count_t count)
+static void BM_add(benchmark::State& state)
 {
   count_t a = 0;
-  for (count_t i = 0; i < count; ++i)
+
+  for (auto _ : state)
   {
-    a += i;
+    a += 1;
   }
-  return count;
+
+  benchmark::DoNotOptimize(a);
 }
+BENCHMARK(BM_add);
 
 count_t non_inline_func(count_t x)
 {
   return x;
 }
 
-count_t benchmark_func_call(count_t count)
+static void BM_func_call(benchmark::State& state)
 {
   count_t a = 0;
-  for (count_t i = 0; i < count; ++i)
+  count_t i{0};
+  for (auto _ : state)
   {
-    a += non_inline_func(i);
+    a += non_inline_func(i++);
   }
 
-  cout << "a: " << a << endl;
-  return count;
+  benchmark::DoNotOptimize(a);
 }
+BENCHMARK(BM_func_call);
 
 inline count_t inline_func(count_t x)
 {
   return x;
 }
 
-count_t benchmark_inline_func_call(count_t count)
+static void BM_inline_func_call(benchmark::State& state)
 {
-  count_t a = 0;
-  for (count_t i = 0; i < count; ++i)
+  count_t a{0};
+  count_t i{0};
+  for (auto _ : state)
   {
-    a += inline_func(i);
+    a += inline_func(i++);
   }
 
-  cout << "a: " << a << endl;
-  return count;
+  benchmark::DoNotOptimize(a);
 }
+BENCHMARK(BM_inline_func_call);
 
-count_t benchmark_deref_ptr(count_t count)
+static void BM_deref_ptr(benchmark::State& state)
 {
   count_t a = 0;
   count_t* b = &a;
   count_t c;
-  count_t result;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     c = *b;
+    benchmark::DoNotOptimize(c);
   }
-  result = c;
-  return result;
 }
+BENCHMARK(BM_deref_ptr);
 
-count_t benchmark_write_64k(count_t count)
+static void BM_write_64k(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     for (int j = 0; j < memSize; ++j)
     {
       mem[j] = j;
+      benchmark::DoNotOptimize(mem[memSize - 1]);
+      benchmark::ClobberMemory();
     }
   }
-  return mem[memSize - 1];
 }
+BENCHMARK(BM_write_64k);
 
-count_t benchmark_read_64k(count_t count)
+static void BM_read_64k(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
+    benchmark::DoNotOptimize(mem[j]);
   }
+  benchmark::ClobberMemory();
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     for (int j = 0; j < memSize; ++j)
     {
       result &= mem[j];
+      benchmark::DoNotOptimize(mem[j]);
     }
   }
-  return result;
 }
 
-count_t benchmark_read_64k_vec(count_t count)
+BENCHMARK(BM_read_64k);
+
+static void BM_read_64k_vec(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   vector<unsigned char> mem(memSize);
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
+    benchmark::DoNotOptimize(mem[j]);
   }
+  benchmark::ClobberMemory();
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     for (int j = 0; j < memSize; ++j)
     {
       result &= mem[j];
+      benchmark::DoNotOptimize(mem[j]);
     }
   }
-  return result;
 }
+BENCHMARK(BM_read_64k_vec);
 
-count_t benchmark_read_64k_vec_at(count_t count)
+static void BM_read_64k_vec_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   vector<unsigned char> mem(memSize);
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
+    benchmark::DoNotOptimize(mem[j]);
   }
+  benchmark::ClobberMemory();
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     for (int j = 0; j < memSize; ++j)
     {
       result &= mem.at(j);
+      benchmark::DoNotOptimize(mem.at(j));
     }
   }
-  return result;
 }
+BENCHMARK(BM_read_64k_vec_at);
 
-count_t benchmark_read_64k_array_at(count_t count)
+static void BM_read_64k_array_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   array<unsigned char, memSize> mem;
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
+    benchmark::DoNotOptimize(mem[j]);
   }
+  benchmark::ClobberMemory();
 
   int result = 1;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     for (int j = 0; j < memSize; ++j)
     {
       result &= mem.at(j);
     }
   }
-  return result;
 }
+BENCHMARK(BM_read_64k_array_at);
 
-count_t benchmark_try_catch(count_t count)
+static void BM_try_catch(benchmark::State& state)
 {
   int result = 0;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     try
     {
@@ -189,24 +208,26 @@ count_t benchmark_try_catch(count_t count)
       ++result;
     }
   }
-  return result;
+  benchmark::DoNotOptimize(result);
 }
+BENCHMARK(BM_try_catch);
 
 int a_func(int a)
 {
   return 2 * a;
 }
 
-count_t benchmark_func_ptr(count_t count)
+static void BM_func_ptr(benchmark::State& state)
 {
   int result = 0;
   auto f_ptr = a_func;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     result += f_ptr(1);
   }
-  return result;
+  benchmark::DoNotOptimize(result);
 }
+BENCHMARK(BM_func_ptr);
 
 class C
 {
@@ -221,27 +242,29 @@ public:
   virtual int a_virtual_method(int a) { return 3 * a; }
 };
 
-count_t benchmark_nonvirt_method(count_t count)
+static void BM_nonvirt_method(benchmark::State& state)
 {
   int result = 0;
   C c;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     result += c.a_method(1);
   }
-  return result;
+  benchmark::DoNotOptimize(result);
 }
+BENCHMARK(BM_nonvirt_method);
 
-count_t benchmark_virt_method(count_t count)
+static void BM_virt_method(benchmark::State& state)
 {
   int result = 0;
   C2 c2;
-  for (count_t i = 0; i < count; ++i)
+  for (auto _ : state)
   {
     result += c2.a_virtual_method(1);
   }
-  return result;
+  benchmark::DoNotOptimize(result);
 }
+BENCHMARK(BM_virt_method);
 
 vector<string> many_strings()
 {
@@ -254,121 +277,72 @@ vector<string> many_strings_static()
   return result;
 }
 
-count_t benchmark_string_concat_plus(count_t count)
+static void BM_string_concat_plus(benchmark::State& state)
 {
-  string result;
-  for (const string& s : many_strings())
+  for (auto _ : state)
   {
-    result += s;
+    string result;
+    for (const string& s : many_strings())
+    {
+      result += s;
+    }
+    benchmark::DoNotOptimize(result);
   }
-  return result.size();
 }
+BENCHMARK(BM_string_concat_plus);
 
-count_t benchmark_string_concat_ostringstream(count_t count)
+static void BM_string_concat_ostringstream(benchmark::State& state)
 {
-  ostringstream result;
-  for (const string& s : many_strings())
+  for (auto _ : state)
   {
-    result << s;
+    ostringstream result;
+    for (const string& s : many_strings())
+    {
+      result << s;
+    }
+    benchmark::DoNotOptimize(result);
   }
-  return result.str().size();
 }
+BENCHMARK(BM_string_concat_ostringstream);
 
-count_t benchmark_lambda(count_t count)
+static void BM_lambda(benchmark::State& state)
 {
-  int result = 0;
-  int a;
-  for (count_t i = 0; i < count; ++i)
+  long result{0};
+  long a{0};
+  long i{0};
+  auto lambda = [](long x, long y) -> long { return x + y; };
+  for (auto _ : state)
   {
-    result += [&a, i]() -> int { return a + i; }();
+    result += lambda(a, i);
+    ++a;
+    ++i;
   }
-  return result;
+  benchmark::DoNotOptimize(result);
 }
+BENCHMARK(BM_lambda);
 
-count_t benchmark_xor(count_t count)
+static void BM_xor(benchmark::State& state)
 {
-  int result = 0;
   unsigned char c = 1;
-  for (count_t i = 0; i < count; ++i)
+  int i{0};
+  for (auto _ : state)
   {
-    c ^= i;
+    c ^= i++;
   }
-  result = c;
-  return result;
+  benchmark::DoNotOptimize(c);
 }
+BENCHMARK(BM_xor);
 
-count_t benchmark_xor_bitset(count_t count)
+void BM_xor_bitset(benchmark::State& state)
 {
-  int result = 0;
   bitset<8> c = 1;
-  for (count_t i = 0; i < count; ++i)
+  int i{0};
+  for (auto _ : state)
   {
-    c ^= i;
+    c ^= i++;
   }
-  result = c.to_ulong();
-  return result;
+  benchmark::DoNotOptimize(c.to_ulong());
 }
+BENCHMARK(BM_xor_bitset);
 
-typedef count_t (*benchmark_ptr)(count_t);
-
-map<string, benchmark_ptr> commands = {
-    {"empty", benchmark_empty},
-    {"add", benchmark_add},
-    {"func_call", benchmark_func_call},
-    {"inline_func_call", benchmark_func_call},
-    {"deref_ptr", benchmark_deref_ptr},
-    {"write_64k", benchmark_write_64k},
-    {"read_64k", benchmark_read_64k},
-    {"read_64k_vec", benchmark_read_64k_vec},
-    {"read_64k_vec_at", benchmark_read_64k_vec_at},
-    {"read_64k_array_at", benchmark_read_64k_array_at},
-    {"try_catch", benchmark_try_catch},
-    {"func_ptr", benchmark_func_ptr},
-    {"nonvirt_method", benchmark_nonvirt_method},
-    {"virt_method", benchmark_virt_method},
-    {"lambda", benchmark_lambda},
-    {"xor", benchmark_xor},
-    {"xor_bitset", benchmark_xor_bitset},
-    {"benchmark_string_concat_plus", benchmark_string_concat_plus},
-    {"benchmark_string_concat_ostringstream", benchmark_string_concat_ostringstream}};
-
-int main(int argc, char const* argv[])
-{
-  if (argc < 3)
-  {
-    cerr << "usage" << endl;
-    exit(1);
-  }
-  auto cmd_name = argv[1];
-  auto count_str = argv[2];
-  count_t count;
-  istringstream count_strm(count_str);
-
-  if (!(count_strm >> count))
-  {
-    cerr << "Invalid count: '" << count_str << endl;
-    exit(1);
-  }
-
-  auto cmd_it = commands.find(cmd_name);
-  if (cmd_it == commands.end())
-  {
-    cerr << "Command '" << cmd_name << "' unknown" << endl;
-    exit(1);
-  }
-
-  thread_clock::time_point start = thread_clock::now();
-  auto result = cmd_it->second(count);
-  thread_clock::time_point stop = thread_clock::now();
-
-  auto duration = duration_cast<nanoseconds>(stop - start).count();
-  auto duration_per_call_ns = duration / static_cast<double>(count);
-  auto duration_ms = duration / 1000000.;
-
-  std::cout << "Result: " << result << endl;
-  std::cout << "duration per call: " << duration_per_call_ns << " ns "
-            << "(" << (duration_per_call_ns / 1000.) << " µs) \n";
-  std::cout << (1. / duration_per_call_ns * 1000) << " million calls per s\n";
-  std::cout << "duration: " << duration_ms << " ms\n";
-  return 0;
-}
+BENCHMARK_MAIN();
