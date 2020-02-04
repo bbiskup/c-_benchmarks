@@ -13,7 +13,7 @@ aux_source_directory(src SRC_LIST)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # clang settings
-set(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Werror -O3 -DFMT_HEADER_ONLY")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -26,6 +26,9 @@ find_package (Boost COMPONENTS
  REQUIRED)
 
 
+ target_include_directories(${PROJECT_NAME}
+    PRIVATE vendor
+ )
 
  target_link_libraries(${PROJECT_NAME}
                       ${Boost_LIBRARIES}

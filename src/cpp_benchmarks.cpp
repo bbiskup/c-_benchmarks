@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 
+#include <fmt/format.h>
+
 #include <array>
 #include <bitset>
 #include <iostream>
@@ -344,5 +346,19 @@ void BM_xor_bitset(benchmark::State& state)
   benchmark::DoNotOptimize(c.to_ulong());
 }
 BENCHMARK(BM_xor_bitset);
+
+static void BM_fmt_positional(benchmark::State& state)
+{
+  count_t i{0};
+  std::string s;
+  for (auto _ : state)
+  {
+    s = fmt::format(
+        "{} {} {} {} {} {} {} {} {} {}", i, i + 1, i + 2, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7,
+        i + 8, i + 9);
+  }
+  benchmark::DoNotOptimize(s);
+}
+BENCHMARK(BM_fmt_positional);
 
 BENCHMARK_MAIN();
