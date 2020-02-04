@@ -364,7 +364,7 @@ BENCHMARK(BM_string_formatting_fmt_positional);
 static void BM_string_formatting_fmt_named_args(benchmark::State& state)
 {
   using namespace fmt::literals;
-  count_t i{0};
+  int i{0};
   std::string s;
   for (auto _ : state)
   {
@@ -377,10 +377,10 @@ static void BM_string_formatting_fmt_named_args(benchmark::State& state)
 }
 BENCHMARK(BM_string_formatting_fmt_named_args);
 
-static void BM_string_formatting_ostringstream_args(benchmark::State& state)
+static void BM_string_formatting_ostringstream(benchmark::State& state)
 {
   using namespace fmt::literals;
-  count_t i{0};
+  int i{0};
   std::string s;
   for (auto _ : state)
   {
@@ -391,6 +391,22 @@ static void BM_string_formatting_ostringstream_args(benchmark::State& state)
     benchmark::DoNotOptimize(s);
   }
 }
-BENCHMARK(BM_string_formatting_ostringstream_args);
+BENCHMARK(BM_string_formatting_ostringstream);
+
+static void BM_string_formatting_sprintf(benchmark::State& state)
+{
+  using namespace fmt::literals;
+  int i{0};
+  char s[1024];
+  for (auto _ : state)
+  {
+    int status  = sprintf(
+        s, "%d %d %d %d %d %d %d %d %d %d ", (i + 0), (i + 1), (i + 2), (i + 3), (i + 4), (i + 5),
+        (i + 6), (i + 7), (i + 8), (i + 9));
+    benchmark::DoNotOptimize(status);
+    benchmark::DoNotOptimize(s);
+  }
+}
+BENCHMARK(BM_string_formatting_sprintf);
 
 BENCHMARK_MAIN();
