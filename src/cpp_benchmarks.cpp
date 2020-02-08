@@ -12,8 +12,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 // See discussion at
 // https://stackoverflow.com/questions/40122141/preventing-compiler-optimizations-while-benchmarking
 // about correct use of benchmark::DoNotOptimize and benchmark::ClobberMemory
@@ -132,7 +130,7 @@ BENCHMARK(BM_read_64k);
 static void BM_read_64k_vec(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
-  vector<unsigned char> mem(memSize);
+  std::vector<unsigned char> mem(memSize);
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
@@ -155,7 +153,7 @@ BENCHMARK(BM_read_64k_vec);
 static void BM_read_64k_vec_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
-  vector<unsigned char> mem(memSize);
+  std::vector<unsigned char> mem(memSize);
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
@@ -178,7 +176,7 @@ BENCHMARK(BM_read_64k_vec_at);
 static void BM_read_64k_array_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
-  array<unsigned char, memSize> mem;
+  std::array<unsigned char, memSize> mem;
   for (int j = 0; j < memSize; ++j)
   {
     mem[j] = j;
@@ -204,9 +202,9 @@ static void BM_try_catch(benchmark::State& state)
   {
     try
     {
-      throw exception();
+      throw std::exception();
     }
-    catch (exception& e)
+    catch (std::exception& e)
     {
       ++result;
     }
@@ -269,14 +267,14 @@ static void BM_virt_method(benchmark::State& state)
 }
 BENCHMARK(BM_virt_method);
 
-vector<string> many_strings()
+std::vector<std::string> many_strings()
 {
-  return vector<string>(10000, "abcdefghijklmnopqrstuvwxyz");
+  return std::vector<std::string>(10000, "abcdefghijklmnopqrstuvwxyz");
 }
 
-vector<string> many_strings_static()
+std::vector<std::string> many_strings_static()
 {
-  static vector<string> result(10000, "abcdefghijklmnopqrstuvwxyz");
+  static std::vector<std::string> result(10000, "abcdefghijklmnopqrstuvwxyz");
   return result;
 }
 
@@ -284,8 +282,8 @@ static void BM_string_concat_plus(benchmark::State& state)
 {
   for (auto _ : state)
   {
-    string result;
-    for (const string& s : many_strings())
+    std::string result;
+    for (const std::string& s : many_strings())
     {
       result += s;
     }
@@ -298,8 +296,8 @@ static void BM_string_concat_ostringstream(benchmark::State& state)
 {
   for (auto _ : state)
   {
-    ostringstream result;
-    for (const string& s : many_strings())
+    std::ostringstream result;
+    for (const std::string& s : many_strings())
     {
       result << s;
     }
@@ -338,7 +336,7 @@ BENCHMARK(BM_xor);
 
 void BM_xor_bitset(benchmark::State& state)
 {
-  bitset<8> c = 1;
+  std::bitset<8> c = 1;
   int i{0};
   for (auto _ : state)
   {
