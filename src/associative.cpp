@@ -9,10 +9,15 @@
 #include <unordered_map>
 #include <vector>
 
+namespace
+{
+constexpr size_t largeVecElementCount{100000};
+}
+
 std::vector<std::string> largeStringVec()
 {
   std::vector<std::string> result;
-  for (int i{0}; i < 100000; ++i)
+  for (size_t i{0}; i < largeVecElementCount; ++i)
   {
     result.push_back(fmt::format("value_{}", i));
   }
