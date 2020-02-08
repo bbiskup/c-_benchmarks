@@ -10,9 +10,17 @@ project(cpp_benchmarks
 set(CMAKE_BUILD_TYPE Release)
 
 set(SRC_LIST
-       src/associative.cpp
-       src/cpp_benchmarks.cpp
-       src/string_formatting.cpp)
+    src/arithmetic.cpp
+    src/associative.cpp
+    src/empty.cpp
+    src/function.cpp
+    src/logical.cpp
+    src/main.cpp
+    src/memory.cpp
+    src/pointer.cpp
+    src/string_formatting.cpp
+    src/virtual.cpp
+)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
