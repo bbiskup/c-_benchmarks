@@ -9,7 +9,11 @@ project(cpp_benchmarks
 # in debug mode does not make sense
 set(CMAKE_BUILD_TYPE Release)
 
-aux_source_directory(src SRC_LIST)
+set(SRC_LIST
+       src/associative.cpp
+       src/cpp_benchmarks.cpp
+       src/string_formatting.cpp)
+
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # clang settings
@@ -23,14 +27,17 @@ include(cmake/google.cmake)
 
 find_package (Boost COMPONENTS 
     system
- REQUIRED)
+REQUIRED)
 
 
- target_include_directories(${PROJECT_NAME}
-    PRIVATE vendor
- )
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        include
+        vendor
+)
 
- target_link_libraries(${PROJECT_NAME}
-                      ${Boost_LIBRARIES}
-                      benchmark
-                      )
+target_link_libraries(
+    ${PROJECT_NAME}
+    ${Boost_LIBRARIES}
+    benchmark
+)
