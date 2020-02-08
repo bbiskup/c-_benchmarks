@@ -2,6 +2,12 @@
 
 #include <benchmark/benchmark.h>
 
+namespace
+{
+// A single call is to fast
+constexpr int methodRepeatCount{100000};
+}
+
 class C
 {
 public:
@@ -17,24 +23,46 @@ public:
 
 static void BM_nonvirt_method(benchmark::State& state)
 {
-  int result = 0;
   C c;
   for (auto _ : state)
   {
-    result += c.a_method(1);
+    int result = 0;
+    for (int i{0}; i < methodRepeatCount; ++i)
+    {
+      result += c.a_method(1);
+    }
+    benchmark::DoNotOptimize(result);
   }
-  benchmark::DoNotOptimize(result);
 }
 BENCHMARK(BM_nonvirt_method);
 
 static void BM_virt_method(benchmark::State& state)
 {
-  int result = 0;
   C2 c2;
   for (auto _ : state)
   {
-    result += c2.a_virtual_method(1);
+    int result = 0;
+    for (int i{0}; i < methodRepeatCount; ++i)
+    {
+      result += c2.a_virtual_method(1);
+    }
+    benchmark::DoNotOptimize(result);
   }
-  benchmark::DoNotOptimize(result);
 }
 BENCHMARK(BM_virt_method);
+
+static void BM_virt_method_via_ptr(benchmark::State& state)
+{
+  C2 c2;
+  C* c{&c2};
+  for (auto _ : state)
+  {
+    int result = 0;
+    for (int i{0}; i < methodRepeatCount; ++i)
+    {
+      result += c->a_virtual_method(1);
+    }
+    benchmark::DoNotOptimize(result);
+  }
+}
+BENCHMARK(BM_virt_method_via_ptr);
