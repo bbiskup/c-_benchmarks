@@ -2,7 +2,7 @@
 
 #include <benchmark/benchmark.h>
 
-static void BM_add(benchmark::State& state)
+static void BM_arithmetic_add(benchmark::State& state)
 {
   count_t a = 0;
 
@@ -13,4 +13,4 @@ static void BM_add(benchmark::State& state)
 
   benchmark::DoNotOptimize(a);
 }
-BENCHMARK(BM_add);
+BENCHMARK(BM_arithmetic_add);

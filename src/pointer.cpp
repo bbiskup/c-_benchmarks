@@ -2,7 +2,7 @@
 
 #include <benchmark/benchmark.h>
 
-static void BM_deref_ptr(benchmark::State& state)
+static void BM_pointer_deref_ptr(benchmark::State& state)
 {
   count_t a = 0;
   count_t* b = &a;
@@ -13,5 +13,5 @@ static void BM_deref_ptr(benchmark::State& state)
     benchmark::DoNotOptimize(c);
   }
 }
-BENCHMARK(BM_deref_ptr);
+BENCHMARK(BM_pointer_deref_ptr);
 

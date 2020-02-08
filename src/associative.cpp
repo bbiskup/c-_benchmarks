@@ -24,7 +24,7 @@ std::vector<std::string> largeStringVec()
   return result;
 }
 
-static void BM_map_insertion(benchmark::State& state)
+static void BM_associative_map_insertion(benchmark::State& state)
 {
   for (auto _ : state)
   {
@@ -38,9 +38,9 @@ static void BM_map_insertion(benchmark::State& state)
     benchmark::ClobberMemory();
   }
 }
-BENCHMARK(BM_map_insertion);
+BENCHMARK(BM_associative_map_insertion);
 
-static void BM_unordered_map_insertion(benchmark::State& state)
+static void BM_associative_unordered_map_insertion(benchmark::State& state)
 {
   for (auto _ : state)
   {
@@ -54,9 +54,9 @@ static void BM_unordered_map_insertion(benchmark::State& state)
     benchmark::ClobberMemory();
   }
 }
-BENCHMARK(BM_unordered_map_insertion);
+BENCHMARK(BM_associative_unordered_map_insertion);
 
-static void BM_map_retrieval(benchmark::State& state)
+static void BM_associative_map_retrieval(benchmark::State& state)
 {
   std::map<std::string, int> m;
   int value{0};
@@ -73,9 +73,9 @@ static void BM_map_retrieval(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_map_retrieval);
+BENCHMARK(BM_associative_map_retrieval);
 
-static void BM_unordered_map_retrieval(benchmark::State& state)
+static void BM_associative_unordered_map_retrieval(benchmark::State& state)
 {
   std::unordered_map<std::string, int> m;
   int value{0};
@@ -92,4 +92,4 @@ static void BM_unordered_map_retrieval(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_unordered_map_retrieval);
+BENCHMARK(BM_associative_unordered_map_retrieval);

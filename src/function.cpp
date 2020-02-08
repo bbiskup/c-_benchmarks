@@ -7,7 +7,7 @@ count_t non_inline_func(count_t x)
   return x;
 }
 
-static void BM_func_call(benchmark::State& state)
+static void BM_function_func_call(benchmark::State& state)
 {
   count_t a = 0;
   count_t i{0};
@@ -18,14 +18,14 @@ static void BM_func_call(benchmark::State& state)
 
   benchmark::DoNotOptimize(a);
 }
-BENCHMARK(BM_func_call);
+BENCHMARK(BM_function_func_call);
 
 inline count_t inline_func(count_t x)
 {
   return x;
 }
 
-static void BM_inline_func_call(benchmark::State& state)
+static void BM_function_inline_func_call(benchmark::State& state)
 {
   count_t a{0};
   count_t i{0};
@@ -36,14 +36,14 @@ static void BM_inline_func_call(benchmark::State& state)
 
   benchmark::DoNotOptimize(a);
 }
-BENCHMARK(BM_inline_func_call);
+BENCHMARK(BM_function_inline_func_call);
 
 int a_func(int a)
 {
   return 2 * a;
 }
 
-static void BM_func_ptr(benchmark::State& state)
+static void BM_function_func_ptr(benchmark::State& state)
 {
   int result = 0;
   auto f_ptr = a_func;
@@ -53,9 +53,9 @@ static void BM_func_ptr(benchmark::State& state)
   }
   benchmark::DoNotOptimize(result);
 }
-BENCHMARK(BM_func_ptr);
+BENCHMARK(BM_function_func_ptr);
 
-static void BM_lambda(benchmark::State& state)
+static void BM_function_lambda(benchmark::State& state)
 {
   long result{0};
   long a{0};
@@ -69,4 +69,4 @@ static void BM_lambda(benchmark::State& state)
   }
   benchmark::DoNotOptimize(result);
 }
-BENCHMARK(BM_lambda);
+BENCHMARK(BM_function_lambda);

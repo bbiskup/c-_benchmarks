@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-static void BM_string_formatting_fmt_positional(benchmark::State& state)
+static void BM_string_formatting_string_formatting_fmt_positional(benchmark::State& state)
 {
   count_t i{0};
   std::string s;
@@ -19,9 +19,9 @@ static void BM_string_formatting_fmt_positional(benchmark::State& state)
     benchmark::DoNotOptimize(s);
   }
 }
-BENCHMARK(BM_string_formatting_fmt_positional);
+BENCHMARK(BM_string_formatting_string_formatting_fmt_positional);
 
-static void BM_string_formatting_fmt_named_args(benchmark::State& state)
+static void BM_string_formatting_string_formatting_fmt_named_args(benchmark::State& state)
 {
   using namespace fmt::literals;
   int i{0};
@@ -35,9 +35,9 @@ static void BM_string_formatting_fmt_named_args(benchmark::State& state)
     benchmark::DoNotOptimize(s);
   }
 }
-BENCHMARK(BM_string_formatting_fmt_named_args);
+BENCHMARK(BM_string_formatting_string_formatting_fmt_named_args);
 
-static void BM_string_formatting_ostringstream(benchmark::State& state)
+static void BM_string_formatting_string_formatting_ostringstream(benchmark::State& state)
 {
   using namespace fmt::literals;
   int i{0};
@@ -51,9 +51,9 @@ static void BM_string_formatting_ostringstream(benchmark::State& state)
     benchmark::DoNotOptimize(s);
   }
 }
-BENCHMARK(BM_string_formatting_ostringstream);
+BENCHMARK(BM_string_formatting_string_formatting_ostringstream);
 
-static void BM_string_formatting_sprintf(benchmark::State& state)
+static void BM_string_formatting_string_formatting_sprintf(benchmark::State& state)
 {
   using namespace fmt::literals;
   int i{0};
@@ -67,5 +67,5 @@ static void BM_string_formatting_sprintf(benchmark::State& state)
     benchmark::DoNotOptimize(s);
   }
 }
-BENCHMARK(BM_string_formatting_sprintf);
+BENCHMARK(BM_string_formatting_string_formatting_sprintf);
 

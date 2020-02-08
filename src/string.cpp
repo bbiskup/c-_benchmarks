@@ -15,7 +15,7 @@ std::vector<std::string> many_strings_static()
   return result;
 }
 
-static void BM_string_concat_plus(benchmark::State& state)
+static void BM_string_string_concat_plus(benchmark::State& state)
 {
   for (auto _ : state)
   {
@@ -27,9 +27,9 @@ static void BM_string_concat_plus(benchmark::State& state)
     benchmark::DoNotOptimize(result);
   }
 }
-BENCHMARK(BM_string_concat_plus);
+BENCHMARK(BM_string_string_concat_plus);
 
-static void BM_string_concat_ostringstream(benchmark::State& state)
+static void BM_string_string_concat_ostringstream(benchmark::State& state)
 {
   for (auto _ : state)
   {
@@ -41,5 +41,5 @@ static void BM_string_concat_ostringstream(benchmark::State& state)
     benchmark::DoNotOptimize(result);
   }
 }
-BENCHMARK(BM_string_concat_ostringstream);
+BENCHMARK(BM_string_string_concat_ostringstream);
 

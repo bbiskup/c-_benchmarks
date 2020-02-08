@@ -4,7 +4,7 @@
 
 #include <array>
 
-static void BM_write_64k(benchmark::State& state)
+static void BM_memory_write_64k(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
@@ -18,9 +18,9 @@ static void BM_write_64k(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_write_64k);
+BENCHMARK(BM_memory_write_64k);
 
-static void BM_read_64k(benchmark::State& state)
+static void BM_memory_read_64k(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   unsigned char mem[memSize];
@@ -42,9 +42,9 @@ static void BM_read_64k(benchmark::State& state)
   }
 }
 
-BENCHMARK(BM_read_64k);
+BENCHMARK(BM_memory_read_64k);
 
-static void BM_read_64k_vec(benchmark::State& state)
+static void BM_memory_read_64k_vec(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   std::vector<unsigned char> mem(memSize);
@@ -65,9 +65,9 @@ static void BM_read_64k_vec(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_read_64k_vec);
+BENCHMARK(BM_memory_read_64k_vec);
 
-static void BM_read_64k_vec_at(benchmark::State& state)
+static void BM_memory_read_64k_vec_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   std::vector<unsigned char> mem(memSize);
@@ -88,9 +88,9 @@ static void BM_read_64k_vec_at(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_read_64k_vec_at);
+BENCHMARK(BM_memory_read_64k_vec_at);
 
-static void BM_read_64k_array_at(benchmark::State& state)
+static void BM_memory_read_64k_array_at(benchmark::State& state)
 {
   const int memSize = 1024 * 64;
   std::array<unsigned char, memSize> mem;
@@ -110,9 +110,9 @@ static void BM_read_64k_array_at(benchmark::State& state)
     }
   }
 }
-BENCHMARK(BM_read_64k_array_at);
+BENCHMARK(BM_memory_read_64k_array_at);
 
-static void BM_try_catch(benchmark::State& state)
+static void BM_memory_try_catch(benchmark::State& state)
 {
   int result = 0;
   for (auto _ : state)
@@ -128,5 +128,5 @@ static void BM_try_catch(benchmark::State& state)
   }
   benchmark::DoNotOptimize(result);
 }
-BENCHMARK(BM_try_catch);
+BENCHMARK(BM_memory_try_catch);
 

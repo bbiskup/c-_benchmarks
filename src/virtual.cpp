@@ -36,7 +36,7 @@ static void BM_nonvirt_method(benchmark::State& state)
 }
 BENCHMARK(BM_nonvirt_method);
 
-static void BM_virt_method(benchmark::State& state)
+static void BM_virtual_virt_method(benchmark::State& state)
 {
   C2 c2;
   for (auto _ : state)
@@ -49,7 +49,7 @@ static void BM_virt_method(benchmark::State& state)
     benchmark::DoNotOptimize(result);
   }
 }
-BENCHMARK(BM_virt_method);
+BENCHMARK(BM_virtual_virt_method);
 
 static void BM_virt_method_via_ptr(benchmark::State& state)
 {

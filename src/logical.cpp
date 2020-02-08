@@ -4,7 +4,7 @@
 
 #include <bitset>
 
-static void BM_xor(benchmark::State& state)
+static void BM_logical_xor(benchmark::State& state)
 {
   unsigned char c = 1;
   int i{0};
@@ -14,9 +14,9 @@ static void BM_xor(benchmark::State& state)
   }
   benchmark::DoNotOptimize(c);
 }
-BENCHMARK(BM_xor);
+BENCHMARK(BM_logical_xor);
 
-void BM_xor_bitset(benchmark::State& state)
+void BM_logical_xor_bitset(benchmark::State& state)
 {
   std::bitset<8> c = 1;
   int i{0};
@@ -26,5 +26,5 @@ void BM_xor_bitset(benchmark::State& state)
   }
   benchmark::DoNotOptimize(c.to_ulong());
 }
-BENCHMARK(BM_xor_bitset);
+BENCHMARK(BM_logical_xor_bitset);
 
