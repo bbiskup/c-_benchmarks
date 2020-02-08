@@ -11,7 +11,7 @@
 
 namespace
 {
-constexpr size_t largeVecElementCount{100000};
+constexpr size_t largeVecElementCount{10000};
 }
 
 std::vector<std::string> largeStringVec()
